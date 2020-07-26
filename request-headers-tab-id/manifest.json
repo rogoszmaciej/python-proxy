@@ -1,0 +1,26 @@
+{
+
+    "manifest_version": 2,
+    "name": "Request Headers Tab ID",
+    "version": "1.0",
+
+    "applications": {
+        "gecko": {
+            "id": "mrogosz@milosolutions.com"
+        }
+    },
+
+    "description": "Adds current tab ID to request headers",
+
+    "icons": {
+        "48": "icons/icon_48.png",
+        "96": "icons/icon_96.png"
+    },
+
+    "permissions": ["tabs", "webRequest", "webRequestBlocking", "<all_urls>"],
+
+    "background": {
+        "scripts": ["headers.js"]
+    }
+
+}
