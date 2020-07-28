@@ -13,7 +13,7 @@ class ProxyList:
 
     """
 
-    proxy_list: List[str, Tuple[str, int]]
+    proxy_list: List[Dict[str, Tuple[str, int]]]
 
     def __init__(self) -> None:
         self.proxy_list = []
@@ -38,14 +38,16 @@ class ProxyList:
             return False
         return True
 
-    def _get_proxy_item(self, key: str, item: List[Dict[str, int]]) -> Optional[Dict[str, Tuple[str, int]]]:
+    def _get_proxy_item(
+            self, key: str, item: List[Dict[str, int]]
+    ) -> Optional[Dict[str, Tuple[str, int]]]:
         if self._validate_proxy_item(item=item):
             return {
                 key: (item[0]["ip"], item[1]["port"])
             }
         return None
 
-    def get_proxies(self) -> List[str, Tuple[str, int]]:
+    def get_proxies(self) -> List[Dict[str, Tuple[str, int]]]:
         """Get list of proxies defined in a YAML configuration file"""
 
         self._get_proxies_from_file()

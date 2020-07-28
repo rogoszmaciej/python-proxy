@@ -18,7 +18,8 @@ RUN sed -i 's/\r//' /start
 RUN chmod +x /start
 
 COPY ./compose/Makefile /Makefile
-RUN make ca-certificates
+RUN make ca-certificates \
+  && make sign-https-certificates
 
 # Fix a case when container creates directories
 # as root and host can't acces them.
