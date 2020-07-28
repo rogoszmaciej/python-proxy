@@ -28,7 +28,7 @@ class ProxyPool(ProxyPoolPlugin):
     def _load_used_proxies() -> List[str]:
         with open("proxies_used.json", "r") as file:
             data = json.load(file)
-        return data
+            return data
     
     @staticmethod
     def _get_proxy_name(proxy: Dict[str, Tuple[str, int]]) -> str:
@@ -40,10 +40,11 @@ class ProxyPool(ProxyPoolPlugin):
     
     @classmethod
     def _update_used_proxies(cls, proxy: Dict[str, Tuple[str, int]]) -> None:
+        used_proxies = cls._load_used_proxies()
+        used_proxies.append(cls._get_proxy_name(proxy=proxy))
+
         with open("proxies_used.json", "w+") as file:
-            data = cls._load_used_proxies()
-            data.append(cls._get_proxy_name(proxy=proxy))
-            json.dump(data, file)
+            json.dump(used_proxies, file)
 
     @classmethod
     def _can_use_proxy(cls, proxy: Dict[str, Tuple[str, int]]) -> bool:
@@ -54,7 +55,7 @@ class ProxyPool(ProxyPoolPlugin):
     
     @classmethod
     def _new_socket_connection(
-            cls, proxy: Dict[str, Tuple[str, int]], timeout: int = DEFAULT_TIMEOUT
+        cls, proxy: Dict[str, Tuple[str, int]], timeout: int = DEFAULT_TIMEOUT
     ) -> socket.socket:
         connection = None
         proxy_address = cls._get_proxy(proxy=proxy)
@@ -66,7 +67,7 @@ class ProxyPool(ProxyPoolPlugin):
                 connection.settimeout(timeout)
                 connection.connect(proxy_address)
         except ValueError:
-            pass # Not a valid IPv4 address
+            pass  # Not a valid IPv4 address
 
         if connection is not None:
             return connection
@@ -87,6 +88,7 @@ class ProxyPool(ProxyPoolPlugin):
             proxy = random.choice(self.UPSTREAM_PROXY_POOL)
             if self._can_use_proxy(proxy=proxy):
                 self.conn = self._new_socket_connection(proxy=proxy)
-                self._update_used_proxies(proxy=proxy)
+                if self.conn is not None:
+                    self._update_used_proxies(proxy=proxy)
 
         return None
