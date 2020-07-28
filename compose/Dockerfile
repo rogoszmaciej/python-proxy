@@ -4,17 +4,21 @@ ENV PYTHONUNBUFFERED 1
 ENV PYTHONPATH "${PYTHONPATH}:/proxy_server"
 
 RUN apk update \
-  && apk add --virtual .build-deps make \
+  && apk add --virtual .build-deps make libressl-dev openssl
   # Decrease image size by remove cachepip
-  && rm -rf /var/cache/apk/*
+  #&& rm -rf /var/cache/apk/*
 
 # Requirements are installed here to ensure they will be cached.
 COPY ./requirements /requirements
+RUN python -m pip install --upgrade pip
 RUN pip install -r requirements/base.txt
 
 COPY ./compose/start /start
 RUN sed -i 's/\r//' /start
 RUN chmod +x /start
+
+COPY ./compose/Makefile /Makefile
+RUN make ca-certificates
 
 # Fix a case when container creates directories
 # as root and host can't acces them.

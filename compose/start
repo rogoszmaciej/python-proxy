@@ -6,4 +6,7 @@ set -o nounset
 
 proxy --port 8899 \
 --hostname 0.0.0.0 \
+--ca-key-file ca-key.pem \
+--ca-cert-file ca-cert.pem \
+--ca-signing-key-file ca-signing-key.pem \
 --plugins proxy_server.ProxyPool
