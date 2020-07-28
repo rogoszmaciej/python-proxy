@@ -5,7 +5,6 @@ import socket
 from typing import Any, Dict, List, Optional, Tuple
 
 from proxy.common.constants import DEFAULT_TIMEOUT
-from proxy.common.utils import new_socket_connection
 from proxy.http.parser import HttpParser
 from proxy.plugin.proxy_pool import ProxyPoolPlugin
 
@@ -17,7 +16,6 @@ class ProxyPool(ProxyPoolPlugin):
 
     UPSTREAM_PROXY_POOL: List[Dict[str, Tuple[str, int]]] = []
     conn: Optional[socket.socket]
-    active_sockets: List[str]
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
